@@ -81,7 +81,7 @@ impl AnimatedFlower {
 
         draw.ellipse()
             .color(DARKORANGE)
-            .w_h(50.0, 50.0)
+            .w_h(75.0, 75.0)
             .finish();
     }
 
