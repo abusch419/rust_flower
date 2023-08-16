@@ -50,32 +50,24 @@ impl AnimatedFlower {
 
     pub fn draw(&self, draw: &Draw) {
         let colors = [RED, BLUE, YELLOW, GREEN, CYAN]; // Colors for the petals
-
+    
         for i in 0..5 {
-            let scale_factor = 1.0;
-
-            // Define a shorter ovular daisy petal shape
-            let petal_points = vec![
-                pt2(0.0, 0.0) * scale_factor,
-                pt2(60.0, 50.0) * scale_factor,
-                pt2(40.0, 125.0) * scale_factor,
-                pt2(0.0, 187.5) * scale_factor,
-                pt2(-40.0, 125.0) * scale_factor,
-                pt2(-60.0, 50.0) * scale_factor,
-                pt2(0.0, 0.0) * scale_factor,
-            ];
-
-            // Draw the petal with the assigned color
-            draw.polygon()
-                .points(petal_points.iter().cloned())
+            // Calculate the position for each petal
+            let x_pos = (i as f32 * 72.0).to_radians().cos() * 75.0;
+            let y_pos = (i as f32 * 72.0).to_radians().sin() * 75.0;
+    
+            // Draw the petal as an ellipse (oval shape)
+            draw.ellipse()
                 .color(colors[i])
-                .rotate(self.petal_rotation + (i as f32 * 72.0).to_radians());
+                .w_h(80.0, 150.0) // Width and height of the oval petal
+                .rotate(self.petal_rotation + (i as f32 * 72.0).to_radians())
+                .x_y(x_pos, y_pos);
         }
-
+    
         // Draw the center of the flower on top of the petals
         draw.ellipse()
-            .color(DARKORANGE)
-            .w_h(150.0, 150.0)
+            .color(DARKGREEN)
+            .w_h(50.0, 50.0)
             .finish();
     }
 
