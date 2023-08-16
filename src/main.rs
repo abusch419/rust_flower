@@ -22,8 +22,8 @@ fn model(app: &App) -> Model {
     }
 }
 
-fn update(_app: &App, model: &mut Model, _update: Update) {
-    model.flower.update();
+fn update(_app: &App, model: &mut Model, update: Update) {
+    model.flower.update(update.since_start.as_secs_f32());
 }
 
 fn view(app: &App, model: &Model, frame: Frame) {
@@ -35,16 +35,16 @@ fn view(app: &App, model: &Model, frame: Frame) {
 
 struct AnimatedFlower {
     petal_rotation: f32,
-    oscillation_angle: f32,
-    breathing_count: u32,
+    rotation_speed: f32, // Speed at which the flower rotates
+    elapsed_time: f32,   // Time since the animation started
 }
 
 impl AnimatedFlower {
     pub fn new() -> Self {
         AnimatedFlower {
             petal_rotation: 0.0,
-            oscillation_angle: 0.0,
-            breathing_count: 0,
+            rotation_speed: 0.02, // Initial rotation speed
+            elapsed_time: 0.0,
         }
     }
 
@@ -52,7 +52,6 @@ impl AnimatedFlower {
         let colors = [RED, BLUE, YELLOW, GREEN, CYAN]; // Colors for the petals
 
         for i in 0..5 {
-            let oscillation = self.oscillation_angle.sin() * 15.0;
             let scale_factor = 1.0;
 
             // Define a shorter ovular daisy petal shape
@@ -80,14 +79,17 @@ impl AnimatedFlower {
             .finish();
     }
 
-    pub fn update(&mut self) {
-        if self.breathing_count < 3 {
-            self.petal_rotation += 0.5;
-            self.oscillation_angle += 0.05;
-
-            if self.oscillation_angle > 2.0 * PI {
-                self.breathing_count += 1;
-                self.oscillation_angle = 0.0;
+    pub fn update(&mut self, elapsed: f32) {
+        self.elapsed_time += elapsed;
+    
+        // Spin at the same speed for the desired duration
+        if self.elapsed_time < 5.0 {
+            self.petal_rotation += self.rotation_speed;
+        } else {
+            // After the desired duration, gradually reduce the rotation speed to make the flower stop
+            if self.rotation_speed > 0.001 { // Adjust this threshold to control the stopping duration
+                self.rotation_speed -= 0.00005;
+                self.petal_rotation += self.rotation_speed;
             }
         }
     }
