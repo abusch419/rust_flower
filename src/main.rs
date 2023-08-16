@@ -23,55 +23,85 @@ fn model(app: &App) -> Model {
 }
 
 fn update(_app: &App, model: &mut Model, _update: Update) {
-    model.flower.update();
+    model.flower.update(_app.mouse.position());
 }
 
 fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
     draw.background().color(WHITE);
-    model.flower.draw(&draw);
+    model.flower.draw(&draw, app.mouse.position());
     draw.to_frame(app, &frame).unwrap();
 }
 
 struct AnimatedFlower {
     petal_rotation: f32,
-    oscillation_angle: f32, // New field to control the squirming effect
+    oscillation_angle: f32,
+    breathing_count: u32,
+    hovered_petal: Option<usize>,
 }
 
 impl AnimatedFlower {
     pub fn new() -> Self {
         AnimatedFlower {
             petal_rotation: 0.0,
-            oscillation_angle: 0.0, // Initialize to 0
+            oscillation_angle: 0.0,
+            breathing_count: 0,
+            hovered_petal: None,
         }
     }
 
-    pub fn draw(&self, draw: &Draw) {
+    pub fn draw(&self, draw: &Draw, mouse_pos: Point2) {
         // Draw the center of the flower
         draw.ellipse()
-            .color(ORANGE) // Corrected the color constant
-            .w_h(30.0, 30.0)
-            .finish(); // Added finish to complete the drawing
+            .color(DARKORANGE)
+            .w_h(150.0, 150.0)
+            .finish();
 
         for i in 0..5 {
-            let oscillation = self.oscillation_angle.sin() * 10.0;
+            let oscillation = self.oscillation_angle.sin() * 15.0;
+            let is_hovered = self.hovered_petal == Some(i);
+            let scale_factor = if is_hovered { 1.5 } else { 1.0 };
 
-            // For simplicity, let's revert to the ellipse method for petals for now
-            draw.ellipse()
-                .x_y(
-                    (i as f32 * 72.0).to_radians().cos() * (50.0 + oscillation),
-                    (i as f32 * 72.0).to_radians().sin() * (50.0 + oscillation),
-                )
-                .w_h(40.0, 80.0)
-                .rotate((i as f32 * 72.0).to_radians())
-                .color(GREEN)
-                .finish(); // Added finish to complete the drawing
+            // Define a shorter ovular daisy petal shape using Bezier curves
+            let petal_points = vec![
+                pt2(0.0, 0.0) * scale_factor,
+                pt2(60.0, 50.0) * scale_factor,
+                pt2(40.0, 125.0) * scale_factor,
+                pt2(0.0, 187.5) * scale_factor,
+                pt2(-40.0, 125.0) * scale_factor,
+                pt2(-60.0, 50.0) * scale_factor,
+                pt2(0.0, 0.0) * scale_factor,
+            ];
+
+            // Draw the petal
+            draw.polyline()
+                .points(petal_points.iter().cloned())
+                .color(LIGHTGREEN)
+                .rotate((i as f32 * 72.0).to_radians());
         }
     }
 
-    pub fn update(&mut self) {
-        self.petal_rotation += 1.0;
-        self.oscillation_angle += 0.1; // Increase the angle for the oscillation effect
+    pub fn update(&mut self, mouse_pos: Point2) {
+        if self.breathing_count < 3 {
+            self.petal_rotation += 0.5;
+            self.oscillation_angle += 0.05;
+
+            if self.oscillation_angle > 2.0 * PI {
+                self.breathing_count += 1;
+                self.oscillation_angle = 0.0;
+            }
+        }
+
+        self.hovered_petal = None;
+        for i in 0..5 {
+            let petal_pos = pt2(
+                (i as f32 * 72.0).to_radians().cos() * 50.0,
+                (i as f32 * 72.0).to_radians().sin() * 50.0,
+            );
+            if petal_pos.distance(mouse_pos) < 40.0 {
+                self.hovered_petal = Some(i);
+                break;
+            }
+        }
     }
 }
-
