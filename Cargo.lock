@@ -1706,6 +1706,7 @@ name = "rust_flower"
 version = "0.1.0"
 dependencies = [
  "nannou",
+ "rand 0.8.5",
 ]
 
 [[package]]
