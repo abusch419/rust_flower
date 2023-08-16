@@ -36,32 +36,24 @@ fn view(app: &App, model: &Model, frame: Frame) {
 
 struct AnimatedFlower {
     petal_rotation: f32,
-    petal_widths: [f32; 5],
-    petal_heights: [f32; 5],
+    petal_rotation_speed: f32,
+    elapsed_time: f32,
+    petal_width: f32,
+    petal_height: f32,
 }
 
 impl AnimatedFlower {
     pub fn new() -> Self {
         let mut rng = rand::thread_rng();
-        let petal_widths: [f32; 5] = [
-            rng.gen_range(60.0..120.0),
-            rng.gen_range(60.0..120.0),
-            rng.gen_range(60.0..120.0),
-            rng.gen_range(60.0..120.0),
-            rng.gen_range(60.0..120.0),
-        ];
-        let petal_heights: [f32; 5] = [
-            rng.gen_range(100.0..200.0),
-            rng.gen_range(100.0..200.0),
-            rng.gen_range(100.0..200.0),
-            rng.gen_range(100.0..200.0),
-            rng.gen_range(100.0..200.0),
-        ];
+        let petal_width = rng.gen_range(60.0..120.0);
+        let petal_height = rng.gen_range(100.0..200.0);
 
         AnimatedFlower {
             petal_rotation: 0.0,
-            petal_widths,
-            petal_heights,
+            petal_rotation_speed: 0.01,
+            elapsed_time: 0.0,
+            petal_width,
+            petal_height,
         }
     }
 
@@ -74,7 +66,7 @@ impl AnimatedFlower {
 
             draw.ellipse()
                 .color(colors[i])
-                .w_h(self.petal_widths[i], self.petal_heights[i])
+                .w_h(self.petal_width, self.petal_height)
                 .rotate(self.petal_rotation + (i as f32 * 72.0).to_radians())
                 .x_y(x_pos, y_pos);
         }
@@ -86,6 +78,10 @@ impl AnimatedFlower {
     }
 
     pub fn update(&mut self) {
-        self.petal_rotation += 0.01;
+        if self.elapsed_time < 5.0 {
+            self.petal_rotation += self.petal_rotation_speed;
+            self.petal_rotation_speed *= 0.995; // Gradual slowdown
+            self.elapsed_time += 0.016; // Approximate time for 60fps
+        }
     }
 }
