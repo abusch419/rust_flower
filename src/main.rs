@@ -23,13 +23,13 @@ fn model(app: &App) -> Model {
 }
 
 fn update(_app: &App, model: &mut Model, _update: Update) {
-    model.flower.update(_app.mouse.position());
+    model.flower.update();
 }
 
 fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
     draw.background().color(WHITE);
-    model.flower.draw(&draw, app.mouse.position());
+    model.flower.draw(&draw);
     draw.to_frame(app, &frame).unwrap();
 }
 
@@ -37,7 +37,6 @@ struct AnimatedFlower {
     petal_rotation: f32,
     oscillation_angle: f32,
     breathing_count: u32,
-    hovered_petal: Option<usize>,
 }
 
 impl AnimatedFlower {
@@ -46,23 +45,17 @@ impl AnimatedFlower {
             petal_rotation: 0.0,
             oscillation_angle: 0.0,
             breathing_count: 0,
-            hovered_petal: None,
         }
     }
 
-    pub fn draw(&self, draw: &Draw, mouse_pos: Point2) {
-        // Draw the center of the flower
-        draw.ellipse()
-            .color(DARKORANGE)
-            .w_h(150.0, 150.0)
-            .finish();
+    pub fn draw(&self, draw: &Draw) {
+        let colors = [RED, BLUE, YELLOW, GREEN, CYAN]; // Colors for the petals
 
         for i in 0..5 {
             let oscillation = self.oscillation_angle.sin() * 15.0;
-            let is_hovered = self.hovered_petal == Some(i);
-            let scale_factor = if is_hovered { 1.5 } else { 1.0 };
+            let scale_factor = 1.0;
 
-            // Define a shorter ovular daisy petal shape using Bezier curves
+            // Define a shorter ovular daisy petal shape
             let petal_points = vec![
                 pt2(0.0, 0.0) * scale_factor,
                 pt2(60.0, 50.0) * scale_factor,
@@ -73,15 +66,21 @@ impl AnimatedFlower {
                 pt2(0.0, 0.0) * scale_factor,
             ];
 
-            // Draw the petal
-            draw.polyline()
+            // Draw the petal with the assigned color
+            draw.polygon()
                 .points(petal_points.iter().cloned())
-                .color(LIGHTGREEN)
-                .rotate((i as f32 * 72.0).to_radians());
+                .color(colors[i])
+                .rotate(self.petal_rotation + (i as f32 * 72.0).to_radians());
         }
+
+        // Draw the center of the flower on top of the petals
+        draw.ellipse()
+            .color(DARKORANGE)
+            .w_h(150.0, 150.0)
+            .finish();
     }
 
-    pub fn update(&mut self, mouse_pos: Point2) {
+    pub fn update(&mut self) {
         if self.breathing_count < 3 {
             self.petal_rotation += 0.5;
             self.oscillation_angle += 0.05;
@@ -89,18 +88,6 @@ impl AnimatedFlower {
             if self.oscillation_angle > 2.0 * PI {
                 self.breathing_count += 1;
                 self.oscillation_angle = 0.0;
-            }
-        }
-
-        self.hovered_petal = None;
-        for i in 0..5 {
-            let petal_pos = pt2(
-                (i as f32 * 72.0).to_radians().cos() * 50.0,
-                (i as f32 * 72.0).to_radians().sin() * 50.0,
-            );
-            if petal_pos.distance(mouse_pos) < 40.0 {
-                self.hovered_petal = Some(i);
-                break;
             }
         }
     }
