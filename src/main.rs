@@ -44,8 +44,9 @@ struct AnimatedFlower {
 
 impl AnimatedFlower {
     pub fn new() -> Self {
-        let petal_width = 100.0;
-        let petal_height = 170.0;
+        let golden_ratio = 1.618;
+        let petal_width = 100.0 * golden_ratio;
+        let petal_height = 100.0;
 
         AnimatedFlower {
             petal_rotation: 0.0,
@@ -83,4 +84,5 @@ impl AnimatedFlower {
             self.elapsed_time += 0.016; // Approximate time for 60fps
         }
     }
+   
 }
