@@ -44,9 +44,8 @@ struct AnimatedFlower {
 
 impl AnimatedFlower {
     pub fn new() -> Self {
-        let mut rng = rand::thread_rng();
-        let petal_width = rng.gen_range(60.0..120.0);
-        let petal_height = rng.gen_range(100.0..200.0);
+        let petal_width = 100.0;
+        let petal_height = 170.0;
 
         AnimatedFlower {
             petal_rotation: 0.0,
@@ -58,16 +57,16 @@ impl AnimatedFlower {
     }
 
     pub fn draw(&self, draw: &Draw) {
-        let colors = [RED, BLUE, YELLOW, GREEN, CYAN];
+        let colors = [RED, BLUE, YELLOW, GREEN, CYAN, MAGENTA];
 
-        for i in 0..5 {
-            let x_pos = (i as f32 * 72.0).to_radians().cos() * 75.0;
-            let y_pos = (i as f32 * 72.0).to_radians().sin() * 75.0;
+        for i in 0..6 {
+            let x_pos = (i as f32 * 60.0).to_radians().cos() * 75.0;
+            let y_pos = (i as f32 * 60.0).to_radians().sin() * 75.0;
 
             draw.ellipse()
                 .color(colors[i])
                 .w_h(self.petal_width, self.petal_height)
-                .rotate(self.petal_rotation + (i as f32 * 72.0).to_radians())
+                .rotate(self.petal_rotation + (i as f32 * 60.0 + 30.0).to_radians())
                 .x_y(x_pos, y_pos);
         }
 
