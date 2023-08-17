@@ -29,7 +29,14 @@ fn update(_app: &App, model: &mut Model, _update: Update) {
 fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
     draw.background().color(WHITE);
-    model.flower.draw(&draw);
+
+    // Draw multiple flowers
+    for i in 0..3 {
+        for j in 0..3 {
+            model.flower.draw(&draw, i as f32 * 100.0, j as f32 * 100.0, 0.3);
+        }
+    }
+
     draw.to_frame(app, &frame).unwrap();
 }
 
@@ -48,8 +55,6 @@ impl AnimatedFlower {
         let petal_height = 100.0;
 
         AnimatedFlower {
-            // adjust this number to change the initial rotation of the petals
-            // 130 seems to give us back a closed bloom to start with
             petal_rotation: 130.0,
             petal_rotation_speed: 0.01,
             elapsed_time: 0.0,
@@ -58,33 +63,32 @@ impl AnimatedFlower {
         }
     }
 
-    pub fn draw(&self, draw: &Draw) {
+    pub fn draw(&self, draw: &Draw, x_offset: f32, y_offset: f32, scale: f32) {
         let colors = [RED, BLUE, YELLOW, GREEN, CYAN, MAGENTA];
 
         for i in 0..6 {
-            let x_pos = (i as f32 * 60.0).to_radians().cos() * 75.0;
-            let y_pos = (i as f32 * 60.0).to_radians().sin() * 75.0;
+            let x_pos = (i as f32 * 60.0).to_radians().cos() * 75.0 * scale + x_offset;
+            let y_pos = (i as f32 * 60.0).to_radians().sin() * 75.0 * scale + y_offset;
 
             draw.ellipse()
                 .color(colors[i])
-                .w_h(self.petal_width, self.petal_height)
+                .w_h(self.petal_width * scale, self.petal_height * scale)
                 .rotate(self.petal_rotation + (i as f32 * 60.0 + 30.0).to_radians())
                 .x_y(x_pos, y_pos);
         }
 
         draw.ellipse()
             .color(DARKORANGE)
-            .w_h(75.0, 75.0)
+            .w_h(75.0 * scale, 75.0 * scale)
+            .x_y(x_offset, y_offset)
             .finish();
     }
 
     pub fn update(&mut self) {
         if self.elapsed_time < 5.0 {
             self.petal_rotation += self.petal_rotation_speed;
-            // make this number bigger and smaller to achieve different bloom effect
-            self.petal_rotation_speed *= 0.9975; // Gradual slowdown
-            self.elapsed_time += 0.016; // Approximate time for 60fps
+            self.petal_rotation_speed *= 0.9975;
+            self.elapsed_time += 0.016;
         }
     }
-   
 }
