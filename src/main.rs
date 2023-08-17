@@ -1,5 +1,4 @@
 use nannou::prelude::*;
-use rand::Rng;
 
 fn main() {
     nannou::app(model)
@@ -49,7 +48,9 @@ impl AnimatedFlower {
         let petal_height = 100.0;
 
         AnimatedFlower {
-            petal_rotation: 0.0,
+            // adjust this number to change the initial rotation of the petals
+            // 130 seems to give us back a closed bloom to start with
+            petal_rotation: 130.0,
             petal_rotation_speed: 0.01,
             elapsed_time: 0.0,
             petal_width,
@@ -80,7 +81,8 @@ impl AnimatedFlower {
     pub fn update(&mut self) {
         if self.elapsed_time < 5.0 {
             self.petal_rotation += self.petal_rotation_speed;
-            self.petal_rotation_speed *= 0.995; // Gradual slowdown
+            // make this number bigger and smaller to achieve different bloom effect
+            self.petal_rotation_speed *= 0.9975; // Gradual slowdown
             self.elapsed_time += 0.016; // Approximate time for 60fps
         }
     }
