@@ -6,7 +6,6 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-lsystems = "0.2.1"
-nannou = "0.18.1"
-noise = "0.8.2"
-rand = "0.8.5"
+image = "0.24"
+rand = "0.8"
+

@@ -1,103 +1,87 @@
-use nannou::prelude::*;
+use image::{Rgb, RgbImage};
+use rand::Rng;
 
 fn main() {
-    nannou::app(model).update(update).run();
+    // Create a new RGB image canvas
+    let mut canvas: RgbImage = RgbImage::new(800, 800);
+
+    // Generate a generative art representation of a flower
+    generate_flower_hypergraph_art(&mut canvas);
+
+    // Save the canvas as an image file
+    let output_path = "generative_flower_hypergraph.png";
+    canvas.save(output_path).expect("Failed to save image");
+
+    println!("Image saved as: {}", output_path);
 }
 
-struct Model {
-    flower: AnimatedFlower,
-}
+fn generate_flower_hypergraph_art(canvas: &mut RgbImage) {
+    let mut rng = rand::thread_rng();
 
-fn model(app: &App) -> Model {
-    app.new_window().size(512, 512).view(view).build().unwrap();
+    // Center of the flower
+    let center_x = canvas.width() / 2;
+    let center_y = canvas.height() / 2;
 
-    Model {
-        flower: AnimatedFlower::new(),
-    }
-}
+    // Number of petals and nodes per petal
+    let num_petals = 10;
+    let num_nodes_per_petal = 20;
 
-fn update(_app: &App, model: &mut Model, _update: Update) {
-    model.flower.update();
-}
+    // Generate petals
+    for i in 0..num_petals {
+        let angle = 2.0 * std::f64::consts::PI * (i as f64) / (num_petals as f64);
+        let petal_x = (center_x as f64 + angle.cos() * 150.0) as u32;
+        let petal_y = (center_y as f64 + angle.sin() * 150.0) as u32;
 
-fn draw_lancealoid_petal(draw: &Draw, x: f32, y: f32, width: f32, height: f32, rotation: f32) {
-    let tip = pt2(x, y + height / 2.0).rotate(rotation);
-    let base = pt2(x, y - height / 2.0).rotate(rotation);
-    let control1 = pt2(x + width / 2.0, y + height / 4.0).rotate(rotation);
-    let control2 = pt2(x + width / 2.0, y - height / 4.0).rotate(rotation);
+        // Randomly select a color for the petal
+        let petal_color = Rgb([
+            rng.gen_range(0..255),
+            rng.gen_range(0..255),
+            rng.gen_range(100..255),
+        ]);
 
-    draw.quad().points(base, control1, tip, control2).color(BLACK);
-}
+        // Draw nodes for the petal
+        let mut nodes = Vec::new();
+        for _ in 0..num_nodes_per_petal {
+            let node_x = rng.gen_range(petal_x - 10..petal_x + 10);
+            let node_y = rng.gen_range(petal_y - 10..petal_y + 10);
+            nodes.push((node_x, node_y));
+        }
 
-fn view(app: &App, model: &Model, frame: Frame) {
-    let draw = app.draw();
-    draw.background().color(WHITE);
-    model.flower.draw(&draw);
-    draw.to_frame(app, &frame).unwrap();
-}
-
-struct AnimatedFlower {
-    petal_rotation: f32,
-    petal_rotation_speed: f32,
-    elapsed_time: f32,
-    petal_width: f32,
-    petal_height: f32,
-}
-
-impl AnimatedFlower {
-    pub fn new() -> Self {
-        let golden_ratio = 1.618;
-        let petal_width = 100.0 * golden_ratio;
-        let petal_height = 100.0;
-
-        AnimatedFlower {
-            // adjust this number to change the initial rotation of the petals
-            // 130 seems to give us back a closed bloom to start with
-            petal_rotation: 130.0,
-            petal_rotation_speed: 0.01,
-            elapsed_time: 0.0,
-            petal_width,
-            petal_height,
+        // Connect nodes to the central node
+        for node in &nodes {
+            draw_line(canvas, center_x, center_y, node.0, node.1, petal_color);
         }
     }
+}
 
-    pub fn draw(&self, draw: &Draw) {
-        // Test values for x and y positions
-        let x_pos = 0.0;
-        let y_pos = 0.0;
+fn draw_line(canvas: &mut RgbImage, x1: u32, y1: u32, x2: u32, y2: u32, color: Rgb<u8>) {
+    // Bresenham's line algorithm
+    let dx = (x2 as i32 - x1 as i32).abs();
+    let dy = (y2 as i32 - y1 as i32).abs();
+    let sx = if x1 < x2 { 1 } else { -1 };
+    let sy = if y1 < y2 { 1 } else { -1 };
+    let mut err = dx - dy;
 
-        // Test values for petal width and height
-        let petal_width = 50.0;
-        let petal_height = 100.0;
+    let mut x = x1 as i32;
+    let mut y = y1 as i32;
 
-        // Test value for rotation
-        let petal_rotation = 0.0;
-
-        let x_center = 0.0; // Center x position of the flower
-        let y_center = 0.0; // Center y position of the flower
-
-        for i in 0..6 {
-            let angle = ((i as f32) * 60.0).to_radians(); // 60-degree separation between petals
-            let x_pos = x_center + 75.0 * angle.cos(); // Adjust the offset as needed
-            let y_pos = y_center + 75.0 * angle.sin(); // Adjust the offset as needed
-
-            draw_lancealoid_petal(
-                &draw,
-                x_pos,
-                y_pos,
-                self.petal_width,
-                self.petal_height,
-                angle // Use angle for rotation
-            );
+    loop {
+        if x >= 0 && y >= 0 && x < canvas.width() as i32 && y < canvas.height() as i32 {
+            canvas.put_pixel(x as u32, y as u32, color);
         }
-    }
 
-    fn update(&mut self) {
-        if self.elapsed_time < 5.0 {
-            self.petal_rotation += self.petal_rotation_speed;
-            // make this number bigger and smaller to achieve different bloom effect
-            self.petal_rotation_speed *= 0.9975; // Gradual slowdown
-            self.elapsed_time += 0.016; // Approximate time for 60fps
+        if x == x2 as i32 && y == y2 as i32 {
+            break;
+        }
+
+        let e2 = 2 * err;
+        if e2 > -dy {
+            err -= dy;
+            x += sx;
+        }
+        if e2 < dx {
+            err += dx;
+            y += sy;
         }
     }
 }
