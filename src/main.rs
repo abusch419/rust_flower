@@ -1,4 +1,5 @@
 extern crate piston_window;
+use std::time::{Duration, Instant};
 
 use piston_window::*;
 
@@ -16,10 +17,18 @@ fn tessellate_triangle(triangle: [Point2; 3], iterations: usize) -> Vec<Point2> 
     ];
 
     let mut triangles = Vec::new();
-    triangles.extend(tessellate_triangle([triangle[0], mid_points[0], mid_points[2]], iterations - 1));
-    triangles.extend(tessellate_triangle([mid_points[0], triangle[1], mid_points[1]], iterations - 1));
-    triangles.extend(tessellate_triangle([mid_points[2], mid_points[1], triangle[2]], iterations - 1));
-    triangles.extend(tessellate_triangle([mid_points[0], mid_points[1], mid_points[2]], iterations - 1));
+    triangles.extend(
+        tessellate_triangle([triangle[0], mid_points[0], mid_points[2]], iterations - 1)
+    );
+    triangles.extend(
+        tessellate_triangle([mid_points[0], triangle[1], mid_points[1]], iterations - 1)
+    );
+    triangles.extend(
+        tessellate_triangle([mid_points[2], mid_points[1], triangle[2]], iterations - 1)
+    );
+    triangles.extend(
+        tessellate_triangle([mid_points[0], mid_points[1], mid_points[2]], iterations - 1)
+    );
 
     triangles
 }
@@ -27,11 +36,22 @@ fn tessellate_triangle(triangle: [Point2; 3], iterations: usize) -> Vec<Point2> 
 fn main() {
     let width = 800;
     let height = 800;
-    let square_size = width as f64 * 0.4;
     let mut window: PistonWindow = WindowSettings::new("8-Pointed Star", [width, height])
         .exit_on_esc(true)
         .build()
         .unwrap();
+
+    let colors = [
+        [0.581, 0.067, 0.0, 1.0],
+        [1.0, 0.149, 0.0, 1.0],
+        [1.0, 0.493, 0.474, 1.0],
+    ];
+
+    let color_change_rate: usize = 20; // Change color every 20 frames
+    let mut frame_count = 0;
+
+    let mut last_color_change = Instant::now();
+    let color_change_interval = Duration::from_millis(250); // Change color every 5 seconds
 
     while let Some(e) = window.next() {
         let triangle = [
@@ -40,41 +60,28 @@ fn main() {
             [0.0, 100.0],
         ];
         let tessellated = tessellate_triangle(triangle, 3);
-
+    
         window.draw_2d(&e, |c, g, _| {
             clear([1.0; 4], g); // Clear the screen
-
-            // Draw tessellated triangles
-            for chunk in tessellated.chunks(3) {
+    
+            for (index, chunk) in tessellated.chunks_exact(3).enumerate() {
+                if Instant::now() - last_color_change >= color_change_interval {
+                    last_color_change = Instant::now();
+                    frame_count = (frame_count + 1) % color_change_rate;
+                }
+    
+                let color_index = (index + frame_count) % colors.len();
+                let color = colors[color_index];
+    
                 polygon(
-                    [rand::random(), rand::random(), rand::random(), 1.0],
-                    &chunk,
-                    c.transform.trans(width as f64 * 0.5, height as f64 * 0.5),
-                    g,
+                    color,
+                    chunk,
+                    c.transform.trans((width as f64) * 0.5, (height as f64) * 0.5),
+                    g
                 );
             }
-
-            // // Define the points for the two squares
-            // let square1 = rectangle::square(-square_size / 2.0, -square_size / 2.0, square_size);
-            // let square2 = rectangle::square(-square_size / 2.0, -square_size / 2.0, square_size);
-
-            // // Draw the first square
-            // rectangle(
-            //     [0.0, 0.0, 0.0, 1.0], // black color
-            //     square1,
-            //     c.transform.trans(width as f64 * 0.5, height as f64 * 0.5),
-            //     g,
-            // );
-
-            // // Draw the second square (rotated 45 degrees)
-            // rectangle(
-            //     [0.0, 0.0, 0.0, 1.0], // black color
-            //     square2,
-            //     c.transform
-            //         .trans(width as f64 * 0.5, height as f64 * 0.5)
-            //         .rot_deg(45.0),
-            //     g,
-            // );
         });
     }
+    
+    
 }
