@@ -10,7 +10,7 @@ struct Model {
 }
 
 fn model(app: &App) -> Model {
-    app.new_window().size(990, 680).view(view).build().unwrap();
+    app.new_window().size(512, 512).view(view).build().unwrap();
 
     Model {
         flower: AnimatedFlower::new(),
@@ -23,14 +23,9 @@ fn update(_app: &App, model: &mut Model, _update: Update) {
 
 fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
-    draw.background().color(WHITE);
 
-    // draw the flowers
-    model.flower.draw(&draw, [10.0, 20.0]);
-    model.flower.draw(&draw, [250.0, 20.0]);
-    model.flower.draw(&draw, [490.0, 20.0]);
-    model.flower.draw(&draw, [730.0, 20.0]);
-   
+    draw.background().color(WHITE);
+    model.flower.draw(&draw);
     draw.to_frame(app, &frame).unwrap();
 }
 
@@ -59,8 +54,7 @@ impl AnimatedFlower {
         }
     }
 
-    // this function draws the flower
-    pub fn draw(&self, draw: &Draw, pos: [f32; 2]) {
+    pub fn draw(&self, draw: &Draw) {
         let color_1 = Srgb::new(98.78 / 255.0, 105.38 / 255.0, 179.3 / 255.0);
         let color_2 = Srgb::new(132.33 / 255.0, 114.29 / 255.0, 178.75 / 255.0);
         let color_3 = Srgb::new(165.88 / 255.0, 123.2 / 255.0, 178.2 / 255.0);
@@ -75,19 +69,16 @@ impl AnimatedFlower {
             let x_pos = ((i as f32) * 60.0).to_radians().cos() * 75.0;
             let y_pos = ((i as f32) * 60.0).to_radians().sin() * 75.0;
 
-            // refactor this code so we can pass in a scale factor and adjust the hard coded height and width with it
-            // we may need different scale factors depending on mobile vs desktop
             draw.ellipse()
                 .color(colors[i])
                 .w_h(self.petal_width, self.petal_height)
                 .rotate(self.petal_rotation + ((i as f32) * 60.0 + 30.0).to_radians())
-                .x_y(pos[0] + x_pos, pos[1] + y_pos).finish();
+                .x_y(x_pos, y_pos);
         }
 
-        draw.ellipse().color(color_7).w_h(75.0, 75.0).x_y(pos[0], pos[1]).finish();
+        draw.ellipse().color(color_7).w_h(75.0, 75.0).finish();
     }
 
-    // This function runs every frame and updates the petal rotation and speed
     pub fn update(&mut self) {
         if self.elapsed_time < 51.0 {
             self.petal_rotation += self.petal_rotation_speed;
