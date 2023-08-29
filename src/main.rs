@@ -26,10 +26,10 @@ fn view(app: &App, model: &Model, frame: Frame) {
     draw.background().color(WHITE);
 
     // draw the flowers
-    model.flower.draw(&draw, [10.0, 20.0]);
-    model.flower.draw(&draw, [250.0, 20.0]);
-    model.flower.draw(&draw, [490.0, 20.0]);
-    model.flower.draw(&draw, [730.0, 20.0]);
+    model.flower.draw(&draw, [-50.0, -50.0], 0.5);
+    // model.flower.draw(&draw, [250.0, 20.0], 0.25);
+    // model.flower.draw(&draw, [490.0, 20.0], 1.25);
+    // model.flower.draw(&draw, [730.0, 20.0], 1.5);
    
     draw.to_frame(app, &frame).unwrap();
 }
@@ -60,7 +60,7 @@ impl AnimatedFlower {
     }
 
     // this function draws the flower
-    pub fn draw(&self, draw: &Draw, pos: [f32; 2]) {
+    pub fn draw(&self, draw: &Draw, pos: [f32; 2], scale_factor: f32) {
         let color_1 = Srgb::new(98.78 / 255.0, 105.38 / 255.0, 179.3 / 255.0);
         let color_2 = Srgb::new(132.33 / 255.0, 114.29 / 255.0, 178.75 / 255.0);
         let color_3 = Srgb::new(165.88 / 255.0, 123.2 / 255.0, 178.2 / 255.0);
@@ -72,19 +72,19 @@ impl AnimatedFlower {
         let colors = [color_1, color_2, color_3, color_4, color_5, color_6, color_7];
 
         for i in 0..6 {
-            let x_pos = ((i as f32) * 60.0).to_radians().cos() * 75.0;
-            let y_pos = ((i as f32) * 60.0).to_radians().sin() * 75.0;
+            let x_pos = ((i as f32) * 60.0).to_radians().cos() * 75.0 * scale_factor;
+            let y_pos = ((i as f32) * 60.0).to_radians().sin() * 75.0 * scale_factor;
 
             // refactor this code so we can pass in a scale factor and adjust the hard coded height and width with it
             // we may need different scale factors depending on mobile vs desktop
             draw.ellipse()
                 .color(colors[i])
-                .w_h(self.petal_width, self.petal_height)
+                .w_h(self.petal_width * scale_factor, self.petal_height * scale_factor)
                 .rotate(self.petal_rotation + ((i as f32) * 60.0 + 30.0).to_radians())
                 .x_y(pos[0] + x_pos, pos[1] + y_pos).finish();
         }
 
-        draw.ellipse().color(color_7).w_h(75.0, 75.0).x_y(pos[0], pos[1]).finish();
+        draw.ellipse().color(color_7).w_h(75.0 * scale_factor, 75.0 * scale_factor).x_y(pos[0], pos[1]).finish();
     }
 
     // This function runs every frame and updates the petal rotation and speed
