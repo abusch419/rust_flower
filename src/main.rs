@@ -10,7 +10,7 @@ struct Model {
 }
 
 fn model(app: &App) -> Model {
-    app.new_window().size(990, 680).view(view).build().unwrap();
+    app.new_window().size(2253, 1550).view(view).build().unwrap();
 
     Model {
         flower: AnimatedFlower::new(),
@@ -26,10 +26,10 @@ fn view(app: &App, model: &Model, frame: Frame) {
     draw.background().color(WHITE);
 
     // draw the flowers
-    model.flower.draw(&draw, [-50.0, -50.0], 0.5);
-    // model.flower.draw(&draw, [250.0, 20.0], 0.25);
-    // model.flower.draw(&draw, [490.0, 20.0], 1.25);
-    // model.flower.draw(&draw, [730.0, 20.0], 1.5);
+    model.flower.draw(&draw, [-680.0, 30.00], 0.90);
+    model.flower.draw(&draw, [-575.0,-275.00], 1.75);
+    model.flower.draw(&draw, [250.0, -275.0], 0.5);
+    model.flower.draw(&draw, [870.0, 275.0], 3.0);
    
     draw.to_frame(app, &frame).unwrap();
 }
