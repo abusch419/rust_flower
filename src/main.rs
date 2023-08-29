@@ -31,10 +31,10 @@ fn view(app: &App, model: &Model, frame: Frame) {
     draw.background().color(best_slate_ever);
 
     // draw the flowers
-    model.flower.draw(&draw, [-680.0, 30.00], 0.90);
-    model.flower.draw(&draw, [-575.0,-275.00], 1.75);
-    model.flower.draw(&draw, [250.0, -275.0], 0.5);
-    model.flower.draw(&draw, [870.0, 275.0], 3.0);
+    model.flower.draw(&draw, [427.0, -359.0], 0.47);
+    model.flower.draw(&draw, [-680.0, 35.00], 0.75);
+    model.flower.draw(&draw, [-605.0,-305.00], 1.9);
+    model.flower.draw(&draw, [870.0, 280.0], 3.0);
    
     draw.to_frame(app, &frame).unwrap();
 }
