@@ -23,7 +23,12 @@ fn update(_app: &App, model: &mut Model, _update: Update) {
 
 fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
-    draw.background().color(WHITE);
+    let best_slate_ever = Srgb::new(
+        (54.0 * 0.7) / 255.0,
+        (69.0 * 0.7) / 255.0,
+        (79.0 * 0.7) / 255.0
+    );
+    draw.background().color(best_slate_ever);
 
     // draw the flowers
     model.flower.draw(&draw, [-680.0, 30.00], 0.90);
@@ -67,7 +72,13 @@ impl AnimatedFlower {
         let color_4 = Srgb::new(195.8 / 255.0, 128.48 / 255.0, 174.02 / 255.0);
         let color_5 = Srgb::new(223.666 / 255.0, 131.707 / 255.0, 167.787 / 255.0);
         let color_6 = Srgb::new(251.534 / 255.0, 134.933 / 255.0, 161.553 / 255.0);
-        let color_7 = Srgb::new(1.0 / 1.0, 1.0 / 1.0, 1.0 / 1.0);
+        // let color_7 = Srgb::new(1.0 / 1.0, 1.0 / 1.0, 1.0 / 1.0);
+        let color_7 = Srgb::new(
+            (54.0 * 0.7) / 255.0,
+            (69.0 * 0.7) / 255.0,
+            (79.0 * 0.7) / 255.0
+        );
+        
 
         let colors = [color_1, color_2, color_3, color_4, color_5, color_6, color_7];
 
