@@ -42,7 +42,6 @@ fn view(app: &App, model: &Model, frame: Frame) {
 struct AnimatedFlower {
     petal_rotation: f32,
     petal_rotation_speed: f32,
-    elapsed_time: f32,
     petal_width: f32,
     petal_height: f32,
     growing: i8,
@@ -59,15 +58,15 @@ impl AnimatedFlower {
 
         AnimatedFlower {
             // adjust this number to change the initial rotation of the petals
-            // 130 seems to give us back a closed bloom to start with
             petal_rotation: 120.3, // started at 300
             petal_rotation_speed: 0.002,
-            elapsed_time: 0.0,
             petal_width,
             petal_height,
             growing: 1,
         }
     }
+
+    // Inside AnimatedFlower's draw method, replace the .ellipse() call with the following
 
     // this function draws the flower
     pub fn draw(&self, draw: &Draw, pos: [f32; 2], scale_factor: f32) {
@@ -77,7 +76,6 @@ impl AnimatedFlower {
         let color_4 = Srgb::new(195.8 / 255.0, 128.48 / 255.0, 174.02 / 255.0);
         let color_5 = Srgb::new(223.666 / 255.0, 131.707 / 255.0, 167.787 / 255.0);
         let color_6 = Srgb::new(251.534 / 255.0, 134.933 / 255.0, 161.553 / 255.0);
-        // let color_7 = Srgb::new(1.0 / 1.0, 1.0 / 1.0, 1.0 / 1.0);
         let color_7 = Srgb::new((54.0 * 0.7) / 255.0, (69.0 * 0.7) / 255.0, (79.0 * 0.7) / 255.0);
 
         let colors = [color_1, color_2, color_3, color_4, color_5, color_6, color_7];
@@ -86,8 +84,6 @@ impl AnimatedFlower {
             let x_pos = ((i as f32) * 60.0).to_radians().cos() * 75.0 * scale_factor;
             let y_pos = ((i as f32) * 60.0).to_radians().sin() * 75.0 * scale_factor;
 
-            // refactor this code so we can pass in a scale factor and adjust the hard coded height and width with it
-            // we may need different scale factors depending on mobile vs desktop
             draw.ellipse()
                 .color(colors[i])
                 .w_h(self.petal_width * scale_factor, self.petal_height * scale_factor)
@@ -103,23 +99,12 @@ impl AnimatedFlower {
             .finish();
     }
 
-    // This function runs every frame and updates the petal rotation and speed
     pub fn update(&mut self) {
-        // if self.elapsed_time < 51.0 {
-        
-        // rotation starts at 300
         self.petal_rotation += self.petal_rotation_speed;
-        //     // make this number bigger and smaller to achieve different bloom effect
         self.petal_rotation_speed *= 0.99995; // Gradual slowdown
-        // self.elapsed_time += 0.016; // Approximate time for 60fps
         // growing the flower
-        println!("{}", self.growing);
         if self.growing == 1 {
-            println!("hi from top of growing");
-            println!("{}", self.growing);
-            println!("{}", self.petal_height);
-            println!("{}", self.petal_rotation);
-            if self.petal_height < 80.0 { // 70 
+            if self.petal_height < 80.0 {
                 self.petal_height += 0.05;
             } else {
                 self.growing = -1;
@@ -127,16 +112,11 @@ impl AnimatedFlower {
         }
         // srinking the flower
         if self.growing == -1 {
-            println!("hi from top of shrinking");
-            println!("{}", self.growing);
-            println!("{}", self.petal_height);
-            println!("{}", self.petal_rotation);
             if self.petal_height > 38.19 {
                 self.petal_height -= 0.05;
             } else {
                 self.growing = 1;
             }
         }
-        // }
     }
 }
