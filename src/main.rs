@@ -36,33 +36,40 @@ fn view(app: &App, model: &Model, frame: Frame) {
     model.flower.draw(&draw, [-605.0, -305.0], 1.9);
     model.flower.draw(&draw, [870.0, 280.0], 3.0);
 
+    // model.flower.draw(&draw, [0.0, 0.0], 0.75);
+    // model.flower.draw(&draw.rotate(PI / 2.0), [0.0, 0.0], 0.75);
+    // model.flower.draw(&draw.rotate(PI), [0.0, 0.0], 0.75);
+    // model.flower.draw(&draw.rotate(PI * 3.0 / 2.0), [0.0, 0.0], 0.75);
+
     draw.to_frame(app, &frame).unwrap();
 }
 
 struct AnimatedFlower {
     petal_rotation: f32,
     petal_rotation_speed: f32,
-    petal_width: f32,
-    petal_height: f32,
+    petal_length: f32,
+    petal_thickness: f32,
     growing: i8,
+    spacing: f32
 }
 
 impl AnimatedFlower {
     pub fn new() -> Self {
         let golden_ratio = 1.618;
-        // let petal_width = 100.0 * golden_ratio;
-        // let petal_height = 100.0;
+        // let petal_length = 100.0 * golden_ratio;
+        // let petal_thickness = 100.0;
 
-        let petal_width = 100.0 * golden_ratio;
-        let petal_height = 100.0 / (golden_ratio * golden_ratio); // 74.086
+        let petal_length = 100.0 * golden_ratio;
+        let petal_thickness = 100.0 / (golden_ratio * golden_ratio); // 38.19
 
         AnimatedFlower {
             // adjust this number to change the initial rotation of the petals
             petal_rotation: 120.3, // started at 300
             petal_rotation_speed: 0.002,
-            petal_width,
-            petal_height,
+            petal_length,
+            petal_thickness,
             growing: 1,
+            spacing: 80.0 //75 previously
         }
     }
 
@@ -81,22 +88,22 @@ impl AnimatedFlower {
         let colors = [color_1, color_2, color_3, color_4, color_5, color_6, color_7];
 
         for i in 0..6 {
-            let x_pos = ((i as f32) * 60.0).to_radians().cos() * 75.0 * scale_factor;
-            let y_pos = ((i as f32) * 60.0).to_radians().sin() * 75.0 * scale_factor;
+            let x_pos = ((i as f32) * 60.0).to_radians().cos() * self.spacing * scale_factor;
+            let y_pos = ((i as f32) * 60.0).to_radians().sin() * self.spacing * scale_factor;
 
             draw.ellipse()
                 .color(colors[i])
-                .w_h(self.petal_width * scale_factor, self.petal_height * scale_factor)
+                .w_h(self.petal_length * scale_factor, self.petal_thickness * scale_factor)
                 .rotate(self.petal_rotation + ((i as f32) * 60.0 + 30.0).to_radians())
                 .x_y(pos[0] + x_pos, pos[1] + y_pos)
                 .finish();
         }
 
-        draw.ellipse()
-            .color(color_7)
-            .w_h(75.0 * scale_factor, 75.0 * scale_factor)
-            .x_y(pos[0], pos[1])
-            .finish();
+        // draw.ellipse()
+        //     .color(color_7)
+        //     .w_h(75.0 * scale_factor, 75.0 * scale_factor)
+        //     .x_y(pos[0], pos[1])
+        //     .finish();
     }
 
     pub fn update(&mut self) {
@@ -104,16 +111,18 @@ impl AnimatedFlower {
         self.petal_rotation_speed *= 0.99995; // Gradual slowdown
         // growing the flower
         if self.growing == 1 {
-            if self.petal_height < 80.0 {
-                self.petal_height += 0.05;
+            if self.petal_thickness < 72.0 {
+                self.petal_thickness += 0.05;
+                self.spacing += 0.05;
             } else {
                 self.growing = -1;
             }
         }
         // srinking the flower
         if self.growing == -1 {
-            if self.petal_height > 38.19 {
-                self.petal_height -= 0.05;
+            if self.petal_thickness > 38.19 {
+                self.petal_thickness -= 0.05;
+                self.spacing -= 0.05;
             } else {
                 self.growing = 1;
             }
