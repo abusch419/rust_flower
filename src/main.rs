@@ -23,12 +23,14 @@ fn update(_app: &App, model: &mut Model, _update: Update) {
 
 fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
-    let best_slate_ever = Srgb::new(
+    let dark_mode = Srgb::new(
         (54.0 * 0.7) / 255.0,
         (69.0 * 0.7) / 255.0,
         (79.0 * 0.7) / 255.0
     );
-    draw.background().color(best_slate_ever);
+    // draw.background().color(best_slate_ever);
+    let light_mode = Srgb::new(230.0 / 250.0, 230.0 / 250.0, 230.0 / 250.0);
+    draw.background().color(miles_color);
 
     // draw the flowers
     model.flower.draw(app, &draw, [326.0, -309.0], 0.47);
