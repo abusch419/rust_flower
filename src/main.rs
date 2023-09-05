@@ -30,7 +30,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
     );
     // draw.background().color(best_slate_ever);
     let light_mode = Srgb::new(230.0 / 250.0, 230.0 / 250.0, 230.0 / 250.0);
-    draw.background().color(miles_color);
+    draw.background().color(light_mode);
 
     // draw the flowers
     model.flower.draw(app, &draw, [326.0, -309.0], 0.47);
