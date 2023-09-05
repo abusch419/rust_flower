@@ -31,10 +31,10 @@ fn view(app: &App, model: &Model, frame: Frame) {
     draw.background().color(best_slate_ever);
 
     // draw the flowers
-    model.flower.draw(&draw, [427.0, -359.0], 0.47);
-    model.flower.draw(&draw, [-680.0, 125.0], 0.75); // y: 35 
-    model.flower.draw(&draw, [-605.0, -305.0], 1.9);
-    model.flower.draw(&draw, [870.0, 280.0], 3.0);
+    model.flower.draw(app, &draw, [427.0, -359.0], 0.47);
+    model.flower.draw(app, &draw, [-680.0, 125.0], 0.75); // y: 35 
+    model.flower.draw(app, &draw, [-605.0, -305.0], 1.9);
+    model.flower.draw(app, &draw, [870.0, 280.0], 3.0);
     
     draw.to_frame(app, &frame).unwrap();
 }
@@ -68,7 +68,9 @@ impl AnimatedFlower {
         }
     }
     
-    pub fn draw(&self, draw: &Draw, pos: [f32; 2], scale_factor: f32) {
+    pub fn draw(&self, app: &App, draw: &Draw, pos: [f32; 2], scale_factor: f32) {
+        let t = app.duration.since_start.secs() as f32; // Add this line
+
         let color_1 = Srgb::new(98.78 / 255.0, 105.38 / 255.0, 179.3 / 255.0);
         let color_2 = Srgb::new(132.33 / 255.0, 114.29 / 255.0, 178.75 / 255.0);
         let color_3 = Srgb::new(165.88 / 255.0, 123.2 / 255.0, 178.2 / 255.0);
@@ -83,11 +85,17 @@ impl AnimatedFlower {
             let x_pos = ((i as f32) * 60.0).to_radians().cos() * self.spacing * scale_factor;
             let y_pos = ((i as f32) * 60.0).to_radians().sin() * self.spacing * scale_factor;
 
+            
+            let hue = (t + i as f32 * 0.1) % 1.0; // Dynamic hue based on time and index
+            let sat = 0.5;
+            let lum = 0.5;
+            let a = 1.0;
+
             draw.ellipse()
                 .color(colors[i])
                 .w_h(self.petal_length * scale_factor, self.petal_thickness * scale_factor)
                 .rotate(self.petal_rotation + ((i as f32) * 60.0 + 30.0).to_radians())
-                .x_y(pos[0] + x_pos, pos[1] + y_pos)
+                .x_y(pos[0] + x_pos, pos[1] + y_pos).hsla(hue, sat, lum, a)
                 .finish();
         }
     }
