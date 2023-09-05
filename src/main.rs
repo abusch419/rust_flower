@@ -77,9 +77,8 @@ impl AnimatedFlower {
         let color_4 = Srgb::new(195.8 / 255.0, 128.48 / 255.0, 174.02 / 255.0);
         let color_5 = Srgb::new(223.666 / 255.0, 131.707 / 255.0, 167.787 / 255.0);
         let color_6 = Srgb::new(251.534 / 255.0, 134.933 / 255.0, 161.553 / 255.0);
-        let color_7 = Srgb::new((54.0 * 0.7) / 255.0, (69.0 * 0.7) / 255.0, (79.0 * 0.7) / 255.0);
 
-        let colors = [color_1, color_2, color_3, color_4, color_5, color_6, color_7];
+        let colors = [color_1, color_2, color_3, color_4, color_5, color_6];
 
         for i in 0..6 {
             let x_pos = ((i as f32) * 60.0).to_radians().cos() * self.spacing * scale_factor;
