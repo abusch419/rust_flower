@@ -32,15 +32,10 @@ fn view(app: &App, model: &Model, frame: Frame) {
 
     // draw the flowers
     model.flower.draw(&draw, [427.0, -359.0], 0.47);
-    model.flower.draw(&draw, [-680.0, 35.0], 0.75);
+    model.flower.draw(&draw, [-680.0, 125.0], 0.75); // y: 35 
     model.flower.draw(&draw, [-605.0, -305.0], 1.9);
     model.flower.draw(&draw, [870.0, 280.0], 3.0);
-
-    // model.flower.draw(&draw, [0.0, 0.0], 0.75);
-    // model.flower.draw(&draw.rotate(PI / 2.0), [0.0, 0.0], 0.75);
-    // model.flower.draw(&draw.rotate(PI), [0.0, 0.0], 0.75);
-    // model.flower.draw(&draw.rotate(PI * 3.0 / 2.0), [0.0, 0.0], 0.75);
-
+    
     draw.to_frame(app, &frame).unwrap();
 }
 
@@ -72,10 +67,7 @@ impl AnimatedFlower {
             spacing: 80.0 //75 previously
         }
     }
-
-    // Inside AnimatedFlower's draw method, replace the .ellipse() call with the following
-
-    // this function draws the flower
+    
     pub fn draw(&self, draw: &Draw, pos: [f32; 2], scale_factor: f32) {
         let color_1 = Srgb::new(98.78 / 255.0, 105.38 / 255.0, 179.3 / 255.0);
         let color_2 = Srgb::new(132.33 / 255.0, 114.29 / 255.0, 178.75 / 255.0);
@@ -98,12 +90,6 @@ impl AnimatedFlower {
                 .x_y(pos[0] + x_pos, pos[1] + y_pos)
                 .finish();
         }
-
-        // draw.ellipse()
-        //     .color(color_7)
-        //     .w_h(75.0 * scale_factor, 75.0 * scale_factor)
-        //     .x_y(pos[0], pos[1])
-        //     .finish();
     }
 
     pub fn update(&mut self) {
@@ -129,3 +115,5 @@ impl AnimatedFlower {
         }
     }
 }
+
+
