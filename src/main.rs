@@ -32,10 +32,10 @@ fn view(app: &App, model: &Model, frame: Frame) {
 
     // draw the flowers
     model.flower.draw(app, &draw, [427.0, -359.0], 0.47);
-    model.flower.draw(app, &draw, [-680.0, 125.0], 0.75); // y: 35 
+    model.flower.draw(app, &draw, [-680.0, 125.0], 0.75); // y: 35
     model.flower.draw(app, &draw, [-605.0, -305.0], 1.9);
     model.flower.draw(app, &draw, [870.0, 280.0], 3.0);
-    
+
     draw.to_frame(app, &frame).unwrap();
 }
 
@@ -45,7 +45,7 @@ struct AnimatedFlower {
     petal_length: f32,
     petal_thickness: f32,
     growing: i8,
-    spacing: f32
+    spacing: f32,
 }
 
 impl AnimatedFlower {
@@ -64,10 +64,10 @@ impl AnimatedFlower {
             petal_length,
             petal_thickness,
             growing: 1,
-            spacing: 80.0 //75 previously
+            spacing: 80.0, //75 previously
         }
     }
-    
+
     pub fn draw(&self, app: &App, draw: &Draw, pos: [f32; 2], scale_factor: f32) {
         let t = app.duration.since_start.secs() as f32; // Add this line
 
@@ -85,8 +85,10 @@ impl AnimatedFlower {
             let x_pos = ((i as f32) * 60.0).to_radians().cos() * self.spacing * scale_factor;
             let y_pos = ((i as f32) * 60.0).to_radians().sin() * self.spacing * scale_factor;
 
-            
-            let hue = (t + i as f32 * 0.1) % 1.0; // Dynamic hue based on time and index
+            let hue_speed = 0.1; // Adjust this to make it faster or slower
+            let hue_offset = (i as f32) * 0.1; // Different for each petal
+            let hue = ((t * hue_speed + hue_offset).sin() * 0.5 + 0.5) % 1.0;
+
             let sat = 0.5;
             let lum = 0.5;
             let a = 1.0;
@@ -95,7 +97,8 @@ impl AnimatedFlower {
                 .color(colors[i])
                 .w_h(self.petal_length * scale_factor, self.petal_thickness * scale_factor)
                 .rotate(self.petal_rotation + ((i as f32) * 60.0 + 30.0).to_radians())
-                .x_y(pos[0] + x_pos, pos[1] + y_pos).hsla(hue, sat, lum, a)
+                .x_y(pos[0] + x_pos, pos[1] + y_pos)
+                .hsla(hue, sat, lum, a)
                 .finish();
         }
     }
@@ -123,5 +126,3 @@ impl AnimatedFlower {
         }
     }
 }
-
-
