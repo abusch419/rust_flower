@@ -1,4 +1,5 @@
 use nannou::prelude::*;
+use nannou::text::Font;
 //use palette::Srgb;
 
 fn main() {
@@ -38,23 +39,43 @@ fn view(app: &App, model: &Model, frame: Frame) {
     model.flower.draw(app, &draw, [-605.0, -305.0], 1.9);
     model.flower.draw(app, &draw, [650.0, 200.0], 2.5);
 
-    draw.text("Hyperbloom")
+    draw.text("An AI")
     .color(dark_mode)
-    .font_size(48)
-    .x_y(-100.0, 50.0)
-    .w(500.0); // sets the max width to 500 pixels
+    .font_size(100)
+    .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
+    .line_spacing(21.0)
+    .x_y(-250.0, 200.0)
+    .w(1000.0); // sets the max width to 500 pixels
     
-    draw.text("We're an AI")
+    draw.text("Technology")
     .color(dark_mode)
-    .font_size(48)
-    .x_y(-50.0, -25.0)
+    .font_size(100)
+    .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
+    .line_spacing(21.0)
+    .x_y(-25.0, 30.0)
+    .w(1000.0); // sets the max width to 500 pixels
+    
+    draw.text("Studio")
+    .color(dark_mode)
+    .font_size(100)
+    .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
+    .line_spacing(21.0)
+    .x_y(100.0, -140.0)
+    .w(1000.0); // sets the max width to 500 pixels
+    
+    draw.text("Transform your vision into stunning products with our expertise in AI and Rust.")
+    .color(dark_mode)
+    .font_size(12)
+    .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
+    .line_spacing(21.0)
+    .x_y(0.0, -425.0)
     .w(1000.0); // sets the max width to 500 pixels
 
-    draw.text("Technology Studio")
-    .color(dark_mode)
-    .font_size(48)
-    .x_y(100.0, -100.0)
-    .w(1000.0); // sets the max width to 500 pixels
+    // draw.text("Technology Studio")
+    // .color(dark_mode)
+    // .font_size(48)
+    // .x_y(125.0, -100.0)
+    // .w(1000.0); // sets the max width to 500 pixels
 
     draw.to_frame(app, &frame).unwrap();
 }
