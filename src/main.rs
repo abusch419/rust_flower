@@ -38,6 +38,24 @@ fn view(app: &App, model: &Model, frame: Frame) {
     model.flower.draw(app, &draw, [-605.0, -305.0], 1.9);
     model.flower.draw(app, &draw, [650.0, 200.0], 2.5);
 
+    draw.text("Hyperbloom")
+    .color(dark_mode)
+    .font_size(48)
+    .x_y(-100.0, 50.0)
+    .w(500.0); // sets the max width to 500 pixels
+    
+    draw.text("We're an AI")
+    .color(dark_mode)
+    .font_size(48)
+    .x_y(-50.0, -25.0)
+    .w(1000.0); // sets the max width to 500 pixels
+
+    draw.text("Technology Studio")
+    .color(dark_mode)
+    .font_size(48)
+    .x_y(100.0, -100.0)
+    .w(1000.0); // sets the max width to 500 pixels
+
     draw.to_frame(app, &frame).unwrap();
 }
 
@@ -85,7 +103,11 @@ impl AnimatedFlower {
         let color_6 = Srgb::new(251.534 / 255.0, 134.933 / 255.0, 161.553 / 255.0);
 
         let colors = [color_1, color_2, color_3, color_4, color_5, color_6];
-        let predefined_hues = [0.25, 0.35, 0.45, 0.55, 0.65, 0.75];
+        // let predefined_hues = [0.25, 0.35, 0.45, 0.55, 0.65, 0.75];
+        // addressing luca's feedback
+        let predefined_hues = [0.25, 0.3, 0.35, 0.4, 0.45, 0.5];
+
+
 
         for i in 0..6 {
             let x_pos = ((i as f32) * 60.0).to_radians().cos() * self.spacing * scale_factor;
