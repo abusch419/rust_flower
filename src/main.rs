@@ -103,11 +103,7 @@ impl AnimatedFlower {
         let color_6 = Srgb::new(251.534 / 255.0, 134.933 / 255.0, 161.553 / 255.0);
 
         let colors = [color_1, color_2, color_3, color_4, color_5, color_6];
-        // let predefined_hues = [0.25, 0.35, 0.45, 0.55, 0.65, 0.75];
-        // addressing luca's feedback
-        let predefined_hues = [0.25, 0.3, 0.35, 0.4, 0.45, 0.5];
-
-
+        let predefined_hues = [0.25, 0.35, 0.45, 0.55, 0.65, 0.75];
 
         for i in 0..6 {
             let x_pos = ((i as f32) * 60.0).to_radians().cos() * self.spacing * scale_factor;
