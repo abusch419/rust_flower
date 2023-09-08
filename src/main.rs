@@ -29,9 +29,13 @@ fn view(app: &App, model: &Model, frame: Frame) {
         (69.0 * 0.7) / 255.0,
         (79.0 * 0.7) / 255.0
     );
-    // draw.background().color(best_slate_ever);
+    let best_slate_ever = Srgb::new(
+        (54.0 * 0.7) / 255.0,
+        (69.0 * 0.7) / 255.0,
+        (79.0 * 0.7) / 255.0
+    );
     let light_mode = Srgb::new(230.0 / 250.0, 230.0 / 250.0, 230.0 / 250.0);
-    draw.background().color(light_mode);
+    draw.background().color(best_slate_ever);
 
     // draw the flowers
     model.flower.draw(app, &draw, [326.0, -309.0], 0.47);
@@ -39,36 +43,68 @@ fn view(app: &App, model: &Model, frame: Frame) {
     model.flower.draw(app, &draw, [-605.0, -305.0], 1.9);
     model.flower.draw(app, &draw, [650.0, 200.0], 2.5);
 
-    draw.text("An AI")
-    .color(dark_mode)
-    .font_size(100)
+    draw.text("We")
+    .color(light_mode)
+    .font_size(90)
     .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
-    .line_spacing(21.0)
-    .x_y(-250.0, 200.0)
+    .line_spacing(0.0)
+    .x_y(-500.0, 50.0)
     .w(1000.0); // sets the max width to 500 pixels
     
-    draw.text("Technology")
-    .color(dark_mode)
-    .font_size(100)
+    draw.text("'")
+    .color(light_mode)
+    .font_size(90)
     .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
-    .line_spacing(21.0)
-    .x_y(-25.0, 30.0)
+    .line_spacing(0.0)
+    .x_y(-430.0, 50.0)
+    .w(1000.0); // sets the max width to 500 pixels
+    
+    draw.text("re")
+    .color(light_mode)
+    .font_size(90)
+    .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
+    .line_spacing(0.0)
+    .x_y(-365.0, 50.0)
+    .w(1000.0); // sets the max width to 500 pixels
+    
+    draw.text("An")
+    .color(light_mode)
+    .font_size(90)
+    .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
+    .line_spacing(0.0)
+    .x_y(-200.0, 50.0)
+    .w(1000.0); // sets the max width to 500 pixels
+
+    draw.text("AI")
+    .color(light_mode)
+    .font_size(90)
+    .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
+    .line_spacing(0.0)
+    .x_y(-40.0, 50.0)
+    .w(1000.0); // sets the max width to 500 pixels
+    
+    draw.text("Tech")
+    .color(light_mode)
+    .font_size(90)
+    .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
+    .line_spacing(0.0)
+    .x_y(-220.0, -70.0)
     .w(1000.0); // sets the max width to 500 pixels
     
     draw.text("Studio")
-    .color(dark_mode)
-    .font_size(100)
+    .color(light_mode)
+    .font_size(90)
     .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
-    .line_spacing(21.0)
-    .x_y(100.0, -140.0)
+    .line_spacing(0.0)
+    .x_y(140.0, -70.0)
     .w(1000.0); // sets the max width to 500 pixels
     
     draw.text("Transform your vision into stunning products with our expertise in AI and Rust.")
-    .color(dark_mode)
+    .color(light_mode)
     .font_size(12)
     .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
     .line_spacing(21.0)
-    .x_y(0.0, -425.0)
+    .x_y(0.0, -200.0)
     .w(1000.0); // sets the max width to 500 pixels
 
     // draw.text("Technology Studio")
