@@ -46,31 +46,31 @@ fn view(app: &App, model: &Model, frame: Frame) {
     draw.text("We")
     .color(light_mode)
     .font_size(90)
-    .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
+    .font(Font::from_bytes(include_bytes!("../BAGNARDSANS.ttf")).unwrap())
     .line_spacing(0.0)
-    .x_y(-500.0, 50.0)
+    .x_y(-480.0, 50.0)
     .w(1000.0); // sets the max width to 500 pixels
     
     draw.text("'")
     .color(light_mode)
     .font_size(90)
-    .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
+    .font(Font::from_bytes(include_bytes!("../euphemia.ttf")).unwrap())
     .line_spacing(0.0)
-    .x_y(-430.0, 50.0)
+    .x_y(-395.0, 50.0)
     .w(1000.0); // sets the max width to 500 pixels
     
     draw.text("re")
     .color(light_mode)
     .font_size(90)
-    .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
+    .font(Font::from_bytes(include_bytes!("../BAGNARDSANS.ttf")).unwrap())
     .line_spacing(0.0)
-    .x_y(-365.0, 50.0)
+    .x_y(-345.0, 50.0)
     .w(1000.0); // sets the max width to 500 pixels
     
     draw.text("An")
     .color(light_mode)
     .font_size(90)
-    .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
+    .font(Font::from_bytes(include_bytes!("../BAGNARDSANS.ttf")).unwrap())
     .line_spacing(0.0)
     .x_y(-200.0, 50.0)
     .w(1000.0); // sets the max width to 500 pixels
@@ -78,7 +78,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
     draw.text("AI")
     .color(light_mode)
     .font_size(90)
-    .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
+    .font(Font::from_bytes(include_bytes!("../BAGNARDSANS.ttf")).unwrap())
     .line_spacing(0.0)
     .x_y(-40.0, 50.0)
     .w(1000.0); // sets the max width to 500 pixels
@@ -86,23 +86,23 @@ fn view(app: &App, model: &Model, frame: Frame) {
     draw.text("Tech")
     .color(light_mode)
     .font_size(90)
-    .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
+    .font(Font::from_bytes(include_bytes!("../BAGNARDSANS.ttf")).unwrap())
     .line_spacing(0.0)
-    .x_y(-220.0, -70.0)
+    .x_y(-150.0, -70.0)
     .w(1000.0); // sets the max width to 500 pixels
     
     draw.text("Studio")
     .color(light_mode)
     .font_size(90)
-    .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
+    .font(Font::from_bytes(include_bytes!("../BAGNARDSANS.ttf")).unwrap())
     .line_spacing(0.0)
-    .x_y(140.0, -70.0)
+    .x_y(150.0, -70.0)
     .w(1000.0); // sets the max width to 500 pixels
     
     draw.text("Transform your vision into stunning products with our expertise in AI and Rust.")
     .color(light_mode)
     .font_size(12)
-    .font(Font::from_bytes(include_bytes!("../ANDALEMO.ttf")).unwrap())
+    .font(Font::from_bytes(include_bytes!("../BAGNARDSANS.ttf")).unwrap())
     .line_spacing(21.0)
     .x_y(0.0, -200.0)
     .w(1000.0); // sets the max width to 500 pixels
